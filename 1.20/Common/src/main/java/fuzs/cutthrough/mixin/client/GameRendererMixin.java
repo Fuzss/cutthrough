@@ -41,7 +41,9 @@ abstract class GameRendererMixin {
         if (this.combatnouveau$originalBlockHitResult != null) {
             if (this.minecraft.hitResult != null && this.minecraft.hitResult.getType() != HitResult.Type.ENTITY) {
                 Vec3 eyePosition = this.minecraft.getCameraEntity().getEyePosition(partialTicks);
-                if (this.combatnouveau$originalBlockHitResult.getLocation().distanceToSqr(eyePosition) < this.minecraft.hitResult.getLocation().distanceToSqr(eyePosition)) {
+                if (this.combatnouveau$originalBlockHitResult.getLocation()
+                        .distanceToSqr(eyePosition) < this.minecraft.hitResult.getLocation()
+                        .distanceToSqr(eyePosition)) {
                     this.minecraft.hitResult = this.combatnouveau$originalBlockHitResult;
                 }
             }
@@ -49,8 +51,11 @@ abstract class GameRendererMixin {
         }
     }
 
-    @Inject(method = {"method_18144", "lambda$pick$61"}, at = @At("HEAD"), cancellable = true)
+    @SuppressWarnings("target")
+    @Inject(method = "lambda$pick$61(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
     private static void isPickable(Entity entity, CallbackInfoReturnable<Boolean> callback) {
-        if (CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly && !entity.isAlive()) callback.setReturnValue(false);
+        if (CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly && !entity.isAlive()) {
+            callback.setReturnValue(false);
+        }
     }
 }

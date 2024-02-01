@@ -21,7 +21,8 @@ public class CutThroughClient implements ClientModConstructor {
             if (!CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly) return EventResult.PASS;
             // prevents breaking a block without collision (like tall grass) when hitting an entity through it and the entity dies or goes out of range
             // vanilla doesn't update the block breaking delay, so the block is broken in the next tick after the entity is gone when the block becomes the new pick result
-            if (minecraft.hitResult.getType() == HitResult.Type.ENTITY && ((EntityHitResult) minecraft.hitResult).getEntity().isAlive()) {
+            if (minecraft.hitResult.getType() == HitResult.Type.ENTITY && ((EntityHitResult) minecraft.hitResult).getEntity()
+                    .isAlive()) {
                 ((MultiPlayerGameModeAccessor) minecraft.gameMode).combatnouveau$setDestroyDelay(5);
             }
             return EventResult.PASS;
