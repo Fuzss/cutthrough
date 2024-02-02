@@ -49,7 +49,8 @@ abstract class GameRendererMixin {
         }
     }
 
-    @Inject(method = {"method_18144", "lambda$pick$61"}, at = @At("HEAD"), cancellable = true)
+    @SuppressWarnings("target")
+    @Inject(method = "lambda$pick$56(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
     private static void isPickable(Entity entity, CallbackInfoReturnable<Boolean> callback) {
         if (CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly && !entity.isAlive()) callback.setReturnValue(false);
     }
