@@ -1,5 +1,6 @@
-package fuzs.cutthrough.client.core;
+package fuzs.cutthrough.forge.client.core;
 
+import fuzs.cutthrough.client.core.ClientAbstractions;
 import net.minecraft.client.Minecraft;
 
 public class ForgeClientAbstractions implements ClientAbstractions {

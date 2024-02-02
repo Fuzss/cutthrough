@@ -1,5 +1,6 @@
-package fuzs.cutthrough;
+package fuzs.cutthrough.fabric;
 
+import fuzs.cutthrough.CutThrough;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import net.fabricmc.api.ModInitializer;
 

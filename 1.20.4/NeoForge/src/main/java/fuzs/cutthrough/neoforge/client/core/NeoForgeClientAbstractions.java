@@ -1,8 +1,9 @@
-package fuzs.cutthrough.client.core;
+package fuzs.cutthrough.neoforge.client.core;
 
+import fuzs.cutthrough.client.core.ClientAbstractions;
 import net.minecraft.client.Minecraft;
 
-public class ForgeClientAbstractions implements ClientAbstractions {
+public class NeoForgeClientAbstractions implements ClientAbstractions {
 
     @Override
     public double getPickRange(Minecraft minecraft) {
