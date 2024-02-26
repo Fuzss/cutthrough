@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(GameRenderer.class)
 abstract class GameRendererMixin {
     @Shadow
@@ -26,28 +28,43 @@ abstract class GameRendererMixin {
     private Minecraft minecraft;
     @Nullable
     @Unique
-    private HitResult combatnouveau$originalBlockHitResult;
+    private HitResult combatnouveau$originalHitResult;
 
-    @Inject(method = "pick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyePosition(F)Lnet/minecraft/world/phys/Vec3;"))
+    @Inject(
+            method = "pick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;getEyePosition(F)Lnet/minecraft/world/phys/Vec3;"
+            )
+    )
     public void pick$0(float partialTicks, CallbackInfo callback) {
-        this.combatnouveau$originalBlockHitResult = this.minecraft.hitResult;
-        Entity entity = this.minecraft.getCameraEntity();
-        double pickRange = ClientAbstractions.INSTANCE.getPickRange(this.minecraft);
-        this.minecraft.hitResult = GameRendererPickHelper.pick(entity, pickRange, partialTicks);
+        if (this.minecraft.hitResult != null) {
+            Entity entity = this.minecraft.getCameraEntity();
+            Objects.requireNonNull(entity, "camera entity is null");
+            double pickRange = ClientAbstractions.INSTANCE.getPickRange(this.minecraft);
+            HitResult hitResult = GameRendererPickHelper.pick(entity, pickRange, partialTicks);
+            Vec3 eyePosition = entity.getEyePosition(partialTicks);
+            if (hitResult.getLocation().distanceToSqr(eyePosition) > this.minecraft.hitResult.getLocation().distanceToSqr(eyePosition)) {
+                this.combatnouveau$originalHitResult = this.minecraft.hitResult;
+                this.minecraft.hitResult = hitResult;
+            }
+        }
     }
 
     @Inject(method = "pick", at = @At("TAIL"))
     public void pick$1(float partialTicks, CallbackInfo callback) {
-        if (this.combatnouveau$originalBlockHitResult != null) {
+        if (this.combatnouveau$originalHitResult != null) {
             if (this.minecraft.hitResult != null && this.minecraft.hitResult.getType() != HitResult.Type.ENTITY) {
-                Vec3 eyePosition = this.minecraft.getCameraEntity().getEyePosition(partialTicks);
-                if (this.combatnouveau$originalBlockHitResult.getLocation()
+                Entity entity = this.minecraft.getCameraEntity();
+                Objects.requireNonNull(entity, "camera entity is null");
+                Vec3 eyePosition = entity.getEyePosition(partialTicks);
+                if (this.combatnouveau$originalHitResult.getLocation()
                         .distanceToSqr(eyePosition) < this.minecraft.hitResult.getLocation()
                         .distanceToSqr(eyePosition)) {
-                    this.minecraft.hitResult = this.combatnouveau$originalBlockHitResult;
+                    this.minecraft.hitResult = this.combatnouveau$originalHitResult;
                 }
             }
-            this.combatnouveau$originalBlockHitResult = null;
+            this.combatnouveau$originalHitResult = null;
         }
     }
 
