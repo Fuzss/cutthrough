@@ -6,8 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "client.GameRendererMixin",
-    "client.accessor.MultiPlayerGameModeAccessor"
+    "client.GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
