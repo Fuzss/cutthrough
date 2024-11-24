@@ -12,9 +12,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.function.Predicate;
 
 @Mixin(GameRenderer.class)
 abstract class GameRendererMixin {
@@ -57,10 +58,14 @@ abstract class GameRendererMixin {
         return hitResult;
     }
 
-    @Inject(method = "lambda$pick$57(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
-    private static void isPickable(Entity entity, CallbackInfoReturnable<Boolean> callback) {
-        if (CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly && !entity.isAlive()) {
-            callback.setReturnValue(false);
-        }
+    @ModifyArg(
+            method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
+            )
+    )
+    private Predicate<Entity> pick(Predicate<Entity> filter) {
+        return CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly ? filter.and(Entity::isAlive) : filter;
     }
 }
