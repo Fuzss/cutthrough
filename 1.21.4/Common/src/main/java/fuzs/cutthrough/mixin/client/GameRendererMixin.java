@@ -28,8 +28,7 @@ abstract class GameRendererMixin {
     private HitResult pick$0(HitResult hitResult, Entity entity, double blockInteractionRange, double entityInteractionRange, float partialTick, @Share(
             "originalHitResult"
     ) LocalRef<HitResult> originalHitResult) {
-        double pickRange = Math.max(blockInteractionRange, entityInteractionRange);
-        HitResult newHitResult = GameRendererPickHelper.pick(entity, pickRange, partialTick);
+        HitResult newHitResult = GameRendererPickHelper.pick(entity, entityInteractionRange, partialTick);
         Vec3 eyePosition = entity.getEyePosition(partialTick);
         if (newHitResult.getLocation().distanceToSqr(eyePosition) >
                 hitResult.getLocation().distanceToSqr(eyePosition)) {
@@ -59,11 +58,10 @@ abstract class GameRendererMixin {
     }
 
     @ModifyArg(
-            method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
-            )
+            method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
+    )
     )
     private Predicate<Entity> pick(Predicate<Entity> filter) {
         return CutThrough.CONFIG.get(ClientConfig.class).targetAliveOnly ? filter.and(Entity::isAlive) : filter;
