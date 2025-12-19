@@ -1,0 +1,61 @@
+{
+    "mod": {
+        "id": "cutthrough",
+        "group": "fuzs.cutthrough",
+        "name": "Cut Through",
+        "version": "21.11.0",
+        "authors": [
+            "Fuzs"
+        ],
+        "description": "Cleanly swing through transparent blocks like tall grass to hit mobs without breaking said block.",
+        "license": "MPL-2.0"
+    },
+    "dependencies": [
+        {
+            "name": "fabricapi",
+            "type": "required",
+            "platforms": [
+                "fabric"
+            ]
+        },
+        {
+            "name": "forgeconfigapiport",
+            "type": "required",
+            "platforms": [
+                "fabric"
+            ]
+        },
+        {
+            "name": "puzzleslib",
+            "type": "required",
+            "platforms": [
+                "fabric",
+                "neoforge"
+            ]
+        }
+    ],
+    "links": [
+        {
+            "name": "github",
+            "slug": "cutthrough"
+        },
+        {
+            "name": "curseforge",
+            "slug": "cut-through",
+            "id": "969423"
+        },
+        {
+            "name": "modrinth",
+            "slug": "cut-through",
+            "id": "Dk6su9JN"
+        }
+    ],
+    "environments": {
+        "client": "required",
+        "server": "unsupported"
+    },
+    "platforms": [
+        "fabric",
+        "neoforge"
+    ]
+}
